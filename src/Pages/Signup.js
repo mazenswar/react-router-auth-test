@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import userActions from '../redux/actions/userActions';
 
-export default class Signup extends Component {
+class Signup extends Component {
   state = {
     username: '',
     password: ''
@@ -10,19 +12,7 @@ export default class Signup extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const config = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(this.state)
-    };
-    fetch('http://localhost:3000/users', config)
-      .then(r => r.json())
-      .then(data => {
-        console.log(data);
-        localStorage.token = data.token;
-      });
+    this.props.createNewUserToAPI(this.state);
   };
 
   render() {
@@ -49,3 +39,9 @@ export default class Signup extends Component {
     );
   }
 }
+
+const mapDispatchToProps = {
+  createNewUserToAPI: userActions.createNewUserToAPI
+};
+
+export default connect(null, mapDispatchToProps)(Signup);

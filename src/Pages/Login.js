@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import userActions from '../redux/actions/userActions';
 
-export default class Login extends Component {
+class Login extends Component {
   state = {
     username: '',
     password: ''
@@ -10,19 +12,7 @@ export default class Login extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const config = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(this.state)
-    };
-    fetch('http://localhost:3000/login', config)
-      .then(r => r.json())
-      .then(data => {
-        console.log(data);
-        localStorage.token = data.token;
-      });
+    this.props.loginUserToAPI(this.state);
   };
 
   render() {
@@ -49,3 +39,9 @@ export default class Login extends Component {
     );
   }
 }
+
+const mapDispatchToProps = {
+  loginUserToAPI: userActions.loginUserToAPI
+};
+
+export default connect(null, mapDispatchToProps)(Login);

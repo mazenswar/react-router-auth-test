@@ -4,25 +4,18 @@ import './App.css';
 import Home from './Pages/Home';
 import { Routes } from './Routes';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { connect } from 'react-redux';
+import userActions from './redux/actions/userActions';
 
 class App extends React.Component {
   componentDidMount() {
     if (localStorage.token) {
-      fetch('http://localhost:3000/persist', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'bearer ' + localStorage.token
-        }
-      })
-        .then(r => r.json())
-        .then(data => {
-          console.log('USERRRRRR   +++++ ', data);
-        });
+      this.props.persistUserFromAPI();
     }
   }
 
   render() {
+    console.log(this.props);
     return (
       <Router>
         <Routes />
@@ -30,5 +23,9 @@ class App extends React.Component {
     );
   }
 }
+const mapDispatchToProps = {
+  persistUserFromAPI: userActions.persistUserFromAPI
+};
 
-export default App;
+const mapStateToProps = state => state;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
